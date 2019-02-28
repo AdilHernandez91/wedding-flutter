@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
 
-import '../scoped-models/main.dart';
+import '../widgets/home/drawer_widget.dart';
+import '../widgets/home/bottom_navigation _widget.dart';
+
+import 'invitation_screen.dart';
+import 'blog_screen.dart';
+import 'guest_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,42 +15,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    BlogScreen(),
+    GuestScreen(),
+    InvitationScreen(),
+  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      drawer: _buildHomeDrawer(),
-      body: Center(child: Text('Home Screen'),),
+      drawer: DrawerWidget(),
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationWidget(_currentIndex, _onTabTapped)
     );
   }
 
-  Widget _buildHomeDrawer() {
-    return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        return Drawer(
-          child: Column(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: Text(model.currentUser.username),
-                accountEmail: Text('User account'),
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Text(model.currentUser.username[0].toUpperCase()),
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text('Logout'),
-                onTap: () {
-                 
-                  Navigator.pushReplacementNamed(context, '/LoginScreen');
-                   model.logOut();
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  void _onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }

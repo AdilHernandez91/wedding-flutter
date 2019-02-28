@@ -1,9 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import 'routes.dart';
 import 'scoped-models/main.dart';
-
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 
@@ -24,19 +24,19 @@ class _WeddingAppState extends State<WeddingApp> {
 
   @override
   void initState() {
-    if (_model.getToken() != null) {
-       _model.getProfile()
-        .then((response) {
-          setState(() => _isAuthenticated = true);
-        })
-        .catchError((err) {
-          setState(() => _isAuthenticated = false);
-        });
-    } else {
-      setState(() => _isAuthenticated = false);
-    }
-
+    _checkIfLodded()
+      .then((response) {
+        setState(() => _isAuthenticated = true);
+      })
+      .catchError((err) {
+        setState(() => _isAuthenticated = false);
+      });
+      
     super.initState();
+  }
+
+  Future<void> _checkIfLodded() async {
+    return await _model.getProfile();
   }
 
   @override
@@ -47,15 +47,15 @@ class _WeddingAppState extends State<WeddingApp> {
         title: 'WeddingApp',
         theme: buildAppTheme(),
         initialRoute: '/LoginScreen',
-        routes: routes,
+        routes: {
+          '/LoginScreen': (BuildContext context) => 
+            !_isAuthenticated ? LoginScreen() : HomeScreen(),
+          '/HomeScreen': (BuildContext context) => HomeScreen(),
+        },
         onGenerateRoute: (RouteSettings settings) {
           if (!_isAuthenticated) {
             return MaterialPageRoute(
               builder: (BuildContext context) => LoginScreen(),
-            );
-          } else {
-            return MaterialPageRoute(
-              builder: (BuildContext context) => HomeScreen(),
             );
           }
         },

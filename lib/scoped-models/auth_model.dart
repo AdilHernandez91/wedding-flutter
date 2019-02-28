@@ -1,8 +1,10 @@
+import 'dart:io';
+import 'dart:convert';
+import 'dart:async';
+
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
-import 'dart:convert';
 
 import '../models/user.dart';
 
