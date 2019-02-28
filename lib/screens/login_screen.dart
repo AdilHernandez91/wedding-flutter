@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildUsernameField() {
     return TextFormField(
+      initialValue: 'nito',
       focusNode: _usernameFocus,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -99,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildPasswordField() {
     return TextFormField(
+      initialValue: 'deadsoul696',
       focusNode: _passwordFocus,
       obscureText: true,
       textInputAction: TextInputAction.done,
