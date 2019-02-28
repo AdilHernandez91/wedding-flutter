@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'user.dart';
-
 class Guest {
+  final int id;
   final String firstName;
   final String lastName;
-  final String genre;
-  final String allergens;
-  final bool isChild;
-  final bool isVegetarian;
-  final User user;
 
   Guest({
+    this.id,
     @required this.firstName,
     @required this.lastName,
-    @required this.genre,
-    this.allergens,
-    @required this.isChild,
-    @required this.isVegetarian,
-    @required this.user
   });
+
+  factory Guest.fromJson(Map<String, dynamic> json) {
+    return Guest(
+      id: json['id'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+    );
+  }
 }

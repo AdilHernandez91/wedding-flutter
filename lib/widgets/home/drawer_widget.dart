@@ -8,11 +8,13 @@ class DrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
+        final user = model.currentUser;
+
         return Drawer(
           child: Column(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text(model.currentUser.username),
+                accountName: Text(user.username),
                 accountEmail: Text('User account'),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.white,
