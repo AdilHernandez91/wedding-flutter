@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'routes.dart';
 import 'scoped-models/main.dart';
-import 'models/user.dart';
+
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+
+import 'utils/theme.dart';
 
 void main() => runApp(WeddingApp());
 
@@ -21,19 +24,19 @@ class _WeddingAppState extends State<WeddingApp> {
 
   @override
   void initState() {
-    if (_model.token != null) _fetchCurrentUser();
-
-    if (_model.currentUser != null) {
-      setState(() => _isAuthenticated = true);
+    if (_model.getToken() != null) {
+       _model.getProfile()
+        .then((response) {
+          setState(() => _isAuthenticated = true);
+        })
+        .catchError((err) {
+          setState(() => _isAuthenticated = false);
+        });
     } else {
       setState(() => _isAuthenticated = false);
     }
 
     super.initState();
-  }
-
-  void _fetchCurrentUser() async {
-    await _model.getProfile();
   }
 
   @override
@@ -42,22 +45,17 @@ class _WeddingAppState extends State<WeddingApp> {
       model: _model,
       child: MaterialApp(
         title: 'WeddingApp',
-        theme: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: Colors.red,
-          accentColor: Colors.redAccent,
-          buttonColor: Colors.red,
-        ),
-        initialRoute: '/',
-        routes: {
-          '/': (BuildContext context) =>
-            _isAuthenticated ? HomeScreen(_model) : LoginScreen(_model),
-          '/home': (BuildContext context) => HomeScreen(_model),
-        },
+        theme: buildAppTheme(),
+        initialRoute: '/LoginScreen',
+        routes: routes,
         onGenerateRoute: (RouteSettings settings) {
           if (!_isAuthenticated) {
             return MaterialPageRoute(
-              builder: (BuildContext context) => LoginScreen(_model),
+              builder: (BuildContext context) => LoginScreen(),
+            );
+          } else {
+            return MaterialPageRoute(
+              builder: (BuildContext context) => HomeScreen(),
             );
           }
         },

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 import '../scoped-models/main.dart';
-import '../models/user.dart';
+
+import '../utils/functions/common_functions.dart';
 
 class LoginScreen extends StatefulWidget {
-  final MainModel model;
-
-  LoginScreen(this.model);
-
   @override
   State<StatefulWidget> createState() {
     return _LoginScreenState();
@@ -77,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildUsernameField() {
     return TextFormField(
-
       focusNode: _usernameFocus,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -125,48 +122,34 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  RaisedButton _buildSubmitButton() {
-    return RaisedButton(
-      child: Text('Login'),
-      textColor: Colors.white,
-      onPressed: _onSubmit,
+  Widget _buildSubmitButton() {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return RaisedButton(
+          child: Text('Login'),
+          textColor: Colors.white,
+          onPressed: () => _onSubmit(model),
+        );
+      },
     );
   }
 
-  void _onSubmit() async {
+  void _onSubmit(MainModel model) async {
     if (!_formKey.currentState.validate()) return;
 
     pr.show();
 
     try {
       _formKey.currentState.save();
-      await widget.model.logIn(_username, _password);
-      await widget.model.getProfile();
+
+      await model.logIn(_username, _password);
+      await model.getProfile();
+
       pr.hide();
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/HomeScreen');
     } catch (err) {
       pr.hide();
-      _handleError('Username or password is incorrect');
+      errorDialog(context, 'Login failed', 'Username or password is incorrect');
     }
-  }
-
-  Future<void> _handleError(String message) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login failed'),
-          content: Text(message),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      }
-    );
   }
 }
