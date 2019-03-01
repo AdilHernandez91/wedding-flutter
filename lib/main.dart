@@ -48,8 +48,7 @@ class _WeddingAppState extends State<WeddingApp> {
         theme: buildAppTheme(),
         initialRoute: '/LoginScreen',
         routes: {
-          '/LoginScreen': (BuildContext context) => 
-            !_isAuthenticated ? LoginScreen() : HomeScreen(),
+          '/LoginScreen': (BuildContext context) => LoginScreen(),
           '/HomeScreen': (BuildContext context) => HomeScreen(),
         },
         onGenerateRoute: (RouteSettings settings) {

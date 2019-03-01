@@ -9,7 +9,6 @@ class DrawerWidget extends StatelessWidget {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
         final user = model.currentUser;
-
         return Drawer(
           child: Column(
             children: <Widget>[

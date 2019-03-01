@@ -61,6 +61,7 @@ mixin AuthModel on Model {
 
       if (response.statusCode == 200) {
         _currentUser = User.fromJson(responseJson);
+        print(_currentUser);
         notifyListeners();
       } else {
         throw Exception(responseJson);

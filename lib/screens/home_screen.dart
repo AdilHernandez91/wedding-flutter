@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/home/drawer_widget.dart';
 import '../widgets/home/bottom_navigation _widget.dart';
 
 import 'invitation_screen.dart';
@@ -25,8 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      drawer: DrawerWidget(),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationWidget(_currentIndex, _onTabTapped)
     );

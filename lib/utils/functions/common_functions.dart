@@ -17,3 +17,28 @@ void errorDialog(BuildContext context, String title, String message) {
     }
   );
 }
+
+void deleteDialog(
+  BuildContext context, String title, String content, Function onDelete
+) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(),
+            color: Colors.grey,
+          ),
+          FlatButton(
+            child: Text('Confirm'),
+            onPressed: () {},
+          ),
+        ],
+      );
+    }
+  );
+}
