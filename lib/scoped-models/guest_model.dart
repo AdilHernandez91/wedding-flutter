@@ -11,12 +11,15 @@ import '../models/guest.dart';
 const String API_URL = 'https://wedding-app-dev.herokuapp.com/api';
 
 mixin GuestModel on Model, AuthModel {
-  List<Guest> _guests = [];
+  List<Guest> _guests;
+  Guest _guestSelected;
   bool _isLoading = false;
 
   List<Guest> get allGuests => _guests;
 
   bool get isLoading => _isLoading;
+
+  Guest get guestSelected => _guestSelected;
 
   Future<void> fetchGuests() async {
     _guests = [];
@@ -75,18 +78,29 @@ mixin GuestModel on Model, AuthModel {
 
   Future<void> deleteGuest(int guestId) async {
     String token = await getToken();
-    Guest guestToRemove;
 
     await http.delete('$API_URL/guests/$guestId/', headers: {
       HttpHeaders.authorizationHeader: 'Token ' + token
     });
 
-    _guests.forEach((Guest guest) {
-      if (guest.id ==guestId)
-        guestToRemove = guest;
+    fetchOwnGuests();
+    notifyListeners();
+  }
+
+  Future<void> getGuestById(int guestId) async {
+    _isLoading = true;
+    String token = await getToken();
+
+    final response = await http.get('$API_URL/guests/$guestId', headers: {
+      HttpHeaders.authorizationHeader: 'Token ' + token
     });
 
-    _guests.remove(guestToRemove);
-    notifyListeners();
+    if (response.statusCode == 200) {
+      _guestSelected =Guest.fromJson(json.decode(response.body));
+      _isLoading = false;
+      notifyListeners();
+    } else {
+      throw Exception('Failed get guest');
+    }
   }
 }

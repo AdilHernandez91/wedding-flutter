@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../models/guest.dart';
 import 'guest_item_widget.dart';
-import 'guest_owner_widget.dart';
 
 class GuestListWidget extends StatelessWidget {
   final List<Guest> guests;
@@ -21,10 +20,6 @@ class GuestListWidget extends StatelessWidget {
   }
 
   Widget _buildGuestItem(bool isAdmin, Guest guest) {
-    if (isAdmin) {
-      return GuestOwnerWidget(guest);
-    }
-
-    return GuestItemWidget(guest);
+    return GuestItemWidget(guest, isAdmin);
   }
 }
