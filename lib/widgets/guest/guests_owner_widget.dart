@@ -4,21 +4,28 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../scoped-models/main.dart';
 import 'guest_list_widget.dart';
 
-class GuestsOwnerWidget extends StatelessWidget {
+class GuestsOwnerWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _GuestsOwnerWidgetState();
+  }
+}
+class _GuestsOwnerWidgetState extends State<GuestsOwnerWidget> {
+  @override
+  void initState() {
+    super.initState();
+
+    MainModel model =ScopedModel.of(context);
+    model.fetchOwnGuests();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return FutureBuilder(
-          future: model.fetchOwnGuests(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) 
-              return Center(child: CircularProgressIndicator());
-
-            return GuestListWidget(snapshot.data, true);
-          },
-        );
+        if (model.isLoading) return Center(child: CircularProgressIndicator());
+        return GuestListWidget(model.allGuests, true);
       },
     );
   }
-}
+}   

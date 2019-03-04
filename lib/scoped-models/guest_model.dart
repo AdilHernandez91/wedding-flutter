@@ -11,8 +11,16 @@ import '../models/guest.dart';
 const String API_URL = 'https://wedding-app-dev.herokuapp.com/api';
 
 mixin GuestModel on Model, AuthModel {
-  Future<List<Guest>> fetchGuests() async {
-    List<Guest> guests = [];
+  List<Guest> _guests = [];
+  bool _isLoading = false;
+
+  List<Guest> get allGuests => _guests;
+
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchGuests() async {
+    _guests = [];
+    _isLoading = true;
     String token = await getToken();
 
     final responseGuest = await http.get('$API_URL/guests/feed/', headers: {
@@ -28,21 +36,23 @@ mixin GuestModel on Model, AuthModel {
 
     if (responseGuest.statusCode == 200 && responseUser.statusCode == 200) {
       responseGuestJson.forEach((guest) {
-        guests.add(Guest.fromJson(guest));
+        _guests.add(Guest.fromJson(guest));
       });
 
       responseUserJson.forEach((user) {
-        guests.add(Guest.fromJson(user));
+        _guests.add(Guest.fromJson(user));
       });
 
-      return guests;
+      _isLoading = false;
+      notifyListeners();
     } else {
       throw Exception('Failed fetching guests');
     }
   }
 
-  Future<List<Guest>> fetchOwnGuests() async {
-    List<Guest> guests = [];
+  Future<void> fetchOwnGuests() async {
+    _guests = [];
+    _isLoading = true;
     String token = await getToken();
 
     final response = await http.get('$API_URL/guests/', headers: {
@@ -53,10 +63,11 @@ mixin GuestModel on Model, AuthModel {
 
     if (response.statusCode == 200) {
       responseJson.forEach((guest) {
-        guests.add(Guest.fromJson(guest));
+        _guests.add(Guest.fromJson(guest));
       });
 
-      return guests;
+       _isLoading = false;
+      notifyListeners();
     } else {
       throw Exception('Failed fetching guests');
     }
@@ -64,9 +75,18 @@ mixin GuestModel on Model, AuthModel {
 
   Future<void> deleteGuest(int guestId) async {
     String token = await getToken();
+    Guest guestToRemove;
 
     await http.delete('$API_URL/guests/$guestId/', headers: {
       HttpHeaders.authorizationHeader: 'Token ' + token
     });
+
+    _guests.forEach((Guest guest) {
+      if (guest.id ==guestId)
+        guestToRemove = guest;
+    });
+
+    _guests.remove(guestToRemove);
+    notifyListeners();
   }
 }
