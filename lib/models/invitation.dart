@@ -10,6 +10,14 @@ class Invitation {
   Invitation({
     @required this.status,
     this.observations,
-    this.user
+    @required this.user
   });
+
+  factory Invitation.fromJson(Map<String, dynamic> json) {
+    return Invitation(
+      status: json['status'],
+      observations: json['observations'],
+      user: json['user']
+    );
+  }
 }

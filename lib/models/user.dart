@@ -1,20 +1,24 @@
+import 'package:flutter/material.dart';
+
+import 'types/genre.dart';
+
 class User {
   final int id;
   final String firstName;
   final String lastName;
   final String username;
-  final String genre;
+  final Genre genre;
   final String allergens;
   final bool isVegetarian;
 
   User({
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.username,
-    this.genre,
+    @required this.id,
+    @required this.firstName,
+    @required this.lastName,
+    @required this.username,
+    @required this.genre,
     this.allergens,
-    this.isVegetarian,
+    @required this.isVegetarian,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
