@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped-models/main.dart';
 
 import '../utils/functions/common_functions.dart';
-import '../widgets/login/username_widget.dart';
-import '../widgets/login/password_widget.dart';
-import '../widgets/login/submit_button_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -42,11 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  UsernameWidget(_usernameFocus, _passwordFocus, _username),
+                  _buildUsernameField(),
                   SizedBox(height: 20.0,),
-                  PasswordWidget(_passwordFocus, _password),
+                  _buildPasswordField(),
                   SizedBox(height: 40.0,),
-                  SubmitButtonWidget(_onSubmit),
+                  _buildSubmitButton(),
                 ],
               ),
             ),
@@ -64,6 +62,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _buildSubmitButton() {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        return RaisedButton(
+          child: Text('Login'),
+          textColor: Colors.white,
+          onPressed: () => _onSubmit(model),
+        );
+      },
+    );
+  }
+
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
@@ -72,6 +82,57 @@ class _LoginScreenState extends State<LoginScreen> {
         BlendMode.dstATop,
       ),
       image: AssetImage('assets/images/landing-image.jpg')
+    );
+  }
+
+  TextFormField _buildUsernameField() {
+    return TextFormField(
+      initialValue: 'nito',
+      focusNode: _usernameFocus,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        hintText: 'Type your username',
+        labelText: 'Username',
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.8),
+      ),
+      validator: (String username) {
+        if (username.isEmpty) {
+          return 'Username is required';
+        }
+      },
+      onFieldSubmitted: (String username) {
+        FocusScope.of(context).requestFocus(_passwordFocus);
+      },
+      onSaved: (String username) {
+        _username = username;
+      },
+    );
+  }
+
+  TextFormField _buildPasswordField() {
+    return TextFormField(
+      initialValue: 'deadsoul696',
+      focusNode: _passwordFocus,
+      obscureText: true,
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+        hintText: 'Type your password',
+        labelText: 'Password',
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.8),
+      ),
+      validator: (String password) {
+        if (password.isEmpty) {
+          return 'Password is required';
+        }
+      },
+      onFieldSubmitted: (String password) {
+        _passwordFocus.unfocus();
+      },
+      onSaved: (String password) {
+        _password = password;
+      },
     );
   }
 

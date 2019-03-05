@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../models/user.dart';
-import 'types/genre.dart';
-
 class Guest {
   final int id;
   final String firstName;
   final String lastName;
   final bool isChild;
   final bool isVegetarian;
-  final Genre genre;
+  final String genre;
   final String allergens;
-  final User user;
 
   Guest({
     this.id,
@@ -19,9 +15,8 @@ class Guest {
     @required this.lastName,
     @required this.genre,
     @required this.isVegetarian,
-    @required this.allergens,
+    this.allergens,
     this.isChild,
-    this.user,
   });
 
   factory Guest.fromJson(Map<String, dynamic> json) {
@@ -33,7 +28,6 @@ class Guest {
       isVegetarian: json['isVegetarian'],
       allergens: json['allergens'],
       isChild: json['isChild'],
-      user: json['user']
     );
   }
 }

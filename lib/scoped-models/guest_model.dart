@@ -7,6 +7,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'auth_model.dart';
 import '../models/guest.dart';
+import '../models/user.dart';
 
 const String API_URL = 'https://wedding-app-dev.herokuapp.com/api';
 
@@ -73,6 +74,28 @@ mixin GuestModel on Model, AuthModel {
       notifyListeners();
     } else {
       throw Exception('Failed fetching guests');
+    }
+  }
+
+  Future<void> addGuest(Guest guest) async {
+    _isLoading = true;
+    final String token = await getToken();
+
+    final response = await http.post('$API_URL/guests/', headers: {
+      HttpHeaders.authorizationHeader: 'Token ' + token,
+    }, body: {
+      'first_name': guest.firstName,
+      'last_name': guest.lastName,
+      'genre': guest.genre,
+      'allergens': guest.allergens,
+    });
+
+    if (response.statusCode == 201) {
+      _isLoading = false;
+      fetchOwnGuests();
+      notifyListeners();
+    } else {
+      throw Exception('Failed adding guest');
     }
   }
 

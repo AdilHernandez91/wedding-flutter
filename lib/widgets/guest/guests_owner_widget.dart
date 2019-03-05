@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../scoped-models/main.dart';
 import 'guest_list_widget.dart';
+import '../../screens/guest_add_screen.dart';
 
 class GuestsOwnerWidget extends StatefulWidget {
   @override
@@ -32,7 +33,14 @@ class _GuestsOwnerWidgetState extends State<GuestsOwnerWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (BuildContext context) {
+              return GuestAddScreen();
+            },
+            fullscreenDialog: true,
+          ));
+        },
       ),
     );
   }

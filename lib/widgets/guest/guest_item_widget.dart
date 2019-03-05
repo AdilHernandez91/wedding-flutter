@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/guest.dart';
-import 'guest_edit_widget.dart';
+import 'guest_delete_widget.dart';
 
 class GuestItemWidget extends StatelessWidget {
   final Guest guest;
@@ -15,9 +15,21 @@ class GuestItemWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text(guest.firstName + ' ' + guest.lastName),
-            trailing: isAdmin ? GuestEditWidget(guest.id) : null,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 10.0,
+            ),
+            leading: Icon(
+              Icons.supervised_user_circle,
+              size: 32,
+            ),
+            title: Text(
+              guest.firstName + ' ' + guest.lastName,
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            trailing: isAdmin ? GuestDeleteWidget(guest.id) : null,
           ),
           Divider(),
         ],

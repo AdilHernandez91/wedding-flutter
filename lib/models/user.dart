@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'types/genre.dart';
-
 class User {
   final int id;
   final String firstName;
   final String lastName;
   final String username;
-  final Genre genre;
+  final String genre;
   final String allergens;
   final bool isVegetarian;
 
